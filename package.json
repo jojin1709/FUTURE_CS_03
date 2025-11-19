@@ -1,0 +1,14 @@
+{
+  "name": "FUTURE_CS_03",
+  "version": "1.0.0",
+  "description": "Secure File Sharing (AES) - Future Interns Task 3 (Node.js + Express)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "dotenv": "^1.2.0",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}

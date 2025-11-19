@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure File Upload</title>
+
+    <style>
+        body {
+            background: #0d1117;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+        }
+
+        .container {
+            width: 500px;
+            margin: 80px auto;
+            background: #161b22;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.8);
+            text-align: center;
+        }
+
+        h2 {
+            color: #58a6ff;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            margin-top: -10px;
+            color: #8b949e;
+            font-size: 14px;
+        }
+
+        #drop-area {
+            border: 2px dashed #30363d;
+            border-radius: 12px;
+            padding: 35px;
+            margin-top: 25px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        #drop-area:hover {
+            background: #21262d;
+            border-color: #58a6ff;
+        }
+
+        #drop-area.dragover {
+            background: #1f6feb33;
+            border-color: #58a6ff;
+        }
+
+        #fileElem {
+            display: none;
+        }
+
+        #preview {
+            margin-top: 18px;
+            color: #ccc;
+            font-size: 15px;
+        }
+
+        /* Progress Bar */
+        #progress {
+            width: 100%;
+            background: #2d333b;
+            height: 14px;
+            border-radius: 10px;
+            margin-top: 22px;
+            display: none;
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #238636, #2ea043);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .btn {
+            margin-top: 25px;
+            padding: 12px 25px;
+            background: #238636;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #2ea043;
+        }
+
+        /* Success animation */
+        #success-msg {
+            display: none;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #2ea043;
+            animation: pop 0.5s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.6); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🔐 Secure File Upload</h2>
+    <p class="subtitle">AES-256 Encrypted at Rest</p>
+
+    <div id="drop-area">
+        <p>⬆ Drag & Drop File Here</p>
+        <p style="font-size: 13px; color: #8b949e;">or click to browse</p>
+        <input type="file" id="fileElem">
+    </div>
+
+    <div id="preview">No file selected</div>
+
+    <div id="progress">
+        <div id="progress-bar"></div>
+    </div>
+
+    <button class="btn" onclick="uploadFile()">Upload & Encrypt</button>
+
+    <div id="success-msg">✔ File Encrypted Successfully!</div>
+</div>
+
+<script>
+    let selectedFile = null;
+
+    const dropArea = document.getElementById("drop-area");
+    const fileInput = document.getElementById("fileElem");
+
+    // Click opens file dialog
+    dropArea.onclick = () => fileInput.click();
+
+    // File selected normally
+    fileInput.onchange = e => {
+        selectedFile = e.target.files[0];
+        document.getElementById("preview").innerText = "Selected: " + selectedFile.name;
+    };
+
+    // Drag & Drop events
+    dropArea.addEventListener("dragover", e => {
+        e.preventDefault();
+        dropArea.classList.add("dragover");
+    });
+
+    dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("dragover");
+    });
+
+    dropArea.addEventListener("drop", e => {
+        e.preventDefault();
+        dropArea.classList.remove("dragover");
+
+        selectedFile = e.dataTransfer.files[0];
+        document.getElementById("preview").innerText = "Selected: " + selectedFile.name;
+    });
+
+    // Upload File Function
+    function uploadFile() {
+        if (!selectedFile) {
+            alert("Please select a file first!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/upload");
+
+        // Progress bar update
+        xhr.upload.onprogress = e => {
+            if (e.lengthComputable) {
+                const percent = (e.loaded / e.total) * 100;
+                document.getElementById("progress").style.display = "block";
+                document.getElementById("progress-bar").style.width = percent + "%";
+            }
+        };
+
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                document.getElementById("success-msg").style.display = "block";
+                setTimeout(() => {
+                    window.location.href = "/download";
+                }, 1000);
+            }
+        };
+
+        xhr.send(formData);
+    }
+</script>
+
+</body>
+</html>

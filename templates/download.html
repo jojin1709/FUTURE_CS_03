@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure Downloads | FUTURE_CS_03</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0d1117;
+            color: #fff;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #161b22;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 10px #000;
+        }
+
+        h2 {
+            color: #58a6ff;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            background: #21262d;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #30363d;
+        }
+
+        .download-btn {
+            background: #238636;
+            padding: 8px 15px;
+            border-radius: 6px;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: #2ea043;
+        }
+
+        .back {
+            color: #58a6ff;
+            text-decoration: none;
+            display: block;
+            margin-top: 25px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .empty {
+            text-align: center;
+            color: #8b949e;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📁 Encrypted Files</h2>
+    <p>Click a file to decrypt and download:</p>
+
+    <ul id="file-list">
+        <!-- Files will load here dynamically -->
+    </ul>
+
+    <div class="empty" id="empty-msg" style="display:none;">No encrypted files found.</div>
+
+    <a href="/" class="back">← Back to Upload</a>
+</div>
+
+<script>
+    async function loadFiles() {
+        try {
+            const res = await fetch("/api/files");
+            const files = await res.json();
+
+            const list = document.getElementById("file-list");
+            const empty = document.getElementById("empty-msg");
+
+            if (files.length === 0) {
+                empty.style.display = "block";
+                return;
+            }
+
+            files.forEach(file => {
+                const li = document.createElement("li");
+
+                li.innerHTML = `
+                    <span>${file}</span>
+                    <a href="/download/${file}" class="download-btn">Download & Decrypt</a>
+                `;
+
+                list.appendChild(li);
+            });
+        } catch (err) {
+            console.error("Error loading files:", err);
+        }
+    }
+
+    loadFiles();
+</script>
+
+</body>
+</html>

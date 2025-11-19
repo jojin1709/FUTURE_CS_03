@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Upload Success</title>
+<style>
+body { 
+    font-family: Arial; 
+    background:#f0f2f5; 
+    text-align:center; 
+    padding-top:100px;
+}
+.card {
+    width: 400px;
+    margin: auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.checkmark {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background:#4CAF50;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto;
+    animation: pop 0.4s ease;
+}
+.checkmark span {
+    font-size:50px;
+    color:white;
+}
+
+@keyframes pop {
+    0% { transform: scale(0.4); opacity:0; }
+    100% { transform: scale(1); opacity:1; }
+}
+
+.btn {
+    margin-top:20px;
+    padding:10px 20px;
+    background:#0066ff;
+    color:white;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:bold;
+}
+.btn:hover {
+    background:#004cd6;
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+    <div class="checkmark"><span>✔</span></div>
+    <h2>File Uploaded Successfully!</h2>
+    <p>Your file has been encrypted & stored safely.</p>
+
+    <a class="btn" href="/download">Go to Download Page</a>
+    <br><br>
+    <a class="btn" href="/">Upload Another File</a>
+</div>
+</body>
+</html>

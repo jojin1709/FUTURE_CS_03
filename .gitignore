@@ -1,0 +1,4 @@
+node_modules/
+.env
+encrypted_files/
+decrypted_temp/
